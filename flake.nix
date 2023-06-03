@@ -3,7 +3,7 @@
     "Raspberry pi's configurations, run with `nix build .#images.{name}`";
 
   inputs = {
-    nixpkgs.url = "nixpkgs/nixos-22.11";
+    nixpkgs = { url = "nixpkgs/nixos-22.11"; };
     betapkgs.url = "nixpkgs/nixos-23.05";
   };
 
@@ -11,7 +11,7 @@
     let
       system = "x86_64-linux";
       pkgs = import nixpkgs {
-        inherit system;
+        # inherit system;
         hostPlatform.system = "armv6l-linux";
         buildPlatform.system = system;
       };
@@ -25,10 +25,13 @@
         # hostPlatform.system = "armv6l-linux";
         # inherit pkgs;
         specialArgs = {
-          inherit pkgs;
-          nixpkgs.hostPlatform.system = "armv6l-linux";
+          nixpkgs = pkgs;
+          # nixpkgs.hostPlatform = "armv6l-linux";
         };
-        modules = [ ./printerConfiguration.nix ];
+        modules = [
+          "${nixpkgs}/nixos/modules/installer/sd-card/sd-image-raspberrypi.nix"
+          ./printerConfiguration.nix
+        ];
       };
 
       images.printer = self.printer.config.system.build.sdImage;
