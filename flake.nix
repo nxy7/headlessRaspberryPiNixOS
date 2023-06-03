@@ -21,13 +21,17 @@
       };
     in {
 
-      nixosConfigurations.printer = nixpkgs.lib.nixosSystem {
-        specialArgs = { inherit pkgs; };
+      printer = nixpkgs.lib.nixosSystem {
+        # hostPlatform.system = "armv6l-linux";
+        # inherit pkgs;
+        specialArgs = {
+          inherit pkgs;
+          nixpkgs.hostPlatform.system = "armv6l-linux";
+        };
         modules = [ ./printerConfiguration.nix ];
       };
 
-      images.printer =
-        self.nixosConfigurations.printer.config.system.build.sdImage;
+      images.printer = self.printer.config.system.build.sdImage;
 
     };
 
