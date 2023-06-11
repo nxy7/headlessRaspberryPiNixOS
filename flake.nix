@@ -22,6 +22,7 @@
     in {
 
       printer = nixpkgs.lib.nixosSystem {
+        system = "armv6l-linux";
         # hostPlatform.system = "armv6l-linux";
         # inherit pkgs;
         specialArgs = {
